@@ -183,7 +183,7 @@ class CostLasso(BaseCost):
 
 ### MAIN SCRIPT ##############################################################
 # EXPERIMENT DAY 4: 12-09-2017
-df = pd.read_csv('PRONTO_dataset/TD_0912/0912Testday4.csv')
+df = pd.read_csv('TD_0912/0912Testday4.csv')
 
 # % Preparation of df
 
