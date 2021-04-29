@@ -266,7 +266,7 @@ problem_tag = 'P6'
 for data_tag in [problem_tag]: #['P1', 'P2', 'P3', 'P4', 'P5', 'P6']:
     
     print('Starting problem: ' + data_tag)
-    data, CPs_true = read_data_files('metrics_data/'+ data_tag)
+    data, CPs_true = read_data_files('Simulated data/'+ data_tag)
     
     
     # NORMALISED SIGNALS
