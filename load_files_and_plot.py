@@ -3,7 +3,7 @@
 Created on Tue Feb 23 16:58:50 2021
 A script to explore datafiles (not genreate, load from directory)
 
-@author: DEREGED1
+@author: Rebecca Gedda
 """
 import pandas as pd
 import numpy as np
@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 import ruptures as rpt
 #from scipy.signal import find_peaks
 
-#import bayesian_changepoint_detection.offline_changepoint_detection as offcd
-#from functools import partial
+import bayesian_changepoint_detection.offline_changepoint_detection as offcd
+from functools import partial
 
 #  FUNCTIONS 
 def get_df_name(df):
@@ -89,7 +89,7 @@ def print_metrics(CPs_true, CPs_predictions):
 # %% Read all files in a directory
 problem_tag = 'P3'
 
-df, data, CPs_true, Bayes_pcp, CPs_bayes = read_directory_files(r'C:/Users/DEREGED1/.spyder-py3/metrics_data/'+problem_tag)
+df, data, CPs_true, Bayes_pcp, CPs_bayes = read_directory_files('Simulated data/'+problem_tag)
 df['min_metric'] = df['AE']*df['MeanTime']*df['RI']
 
 # Divide into PELT and WIN
@@ -100,7 +100,7 @@ df_WIN = df[df['Search_direction']=='WIN']
 #cp_bayes = np.concatenate([cp_bayes, [data.shape[0]]])
 
 #CPs_bayes = pd.DataFrame(cp_bayes)
-#CPs_bayes.to_csv(r'C:/Users/DEREGED1/.spyder-py3/metrics_data/'+problem_tag+'/CPs_bayes.dat')
+#CPs_bayes.to_csv('Simulated data/'+problem_tag+'/CPs_bayes.dat')
 
 # % PRINT METRICS FOR SOME PREDICTIONS
 print('BAYESIAN PREDICTIONS')
@@ -123,45 +123,13 @@ cp3 = [ 110,  210,  310,  470,  575,  675,  800,  900, 1005]
 plt.plot( cp3, np.ones(len(cp3))*-6,  'o', label = "Ridge")
 
 plt.plot( CPs_bayes, np.ones(len(CPs_bayes))*-7, 'X', label = 'Bayesian' )
-
 plt.legend(loc='upper left', fontsize=16)
-
-# %% PLOT COSTS
-
-#list_of_sets = [l1_WIN_changeing_var, l2_WIN_changeing_var, ar_WIN_changeing_var, clinear_WIN_changeing_var, normal_WIN_changeing_var, m_WIN_changeing_var]#, l2_total, ar_total, m_penalty_100, clinear_penalty, normal_total]
-
-for metric in ['K', 'AE','MeanTime', 'Percision', 'Recall', 'F1']:    
-    plot_all_costs(metric, df_WIN , min_val= 0, max_val=40)
-
 
 # %% PLOT CPS
 
-# Piecewise constant
-CP_est = [40, 305, 340, 605, 640, 900]
-
-# Lin_data
-#CP_est = [105, 190, 300, 405, 505, 600] # AR
-#CP_est_N = [105, 195, 300, 480, 600] # Normal
-
-# Variance data
-#CP_est_N = [185, 370, 685, 760, 850, 930, 1005] # Normal pen = 0 , MT = 22
-#CP_est = 	[ 185,  370,  930, 1005] # Norma, pen = 1:49  MT = 0.6666
-
-# AR data
-#CP_est = [150, 305, 450, 605, 750, 900] # AR
-
-# Exp_lin
-#CP_est_N =	[200, 300, 500, 600, 800, 900] # AR, pen 0, MT = 0
-#CP_est = [200, 340, 500, 630, 800, 900] # Normal, pen = 0, MT = 14
-
-# Oscil data
-#CP_est_N =	[ 50, 150, 220, 325, 400, 500, 570, 700] # Normal, pen 0,  MT = 27.14,
-#CP_est =	[ 60, 130, 230, 310, 410, 485, 585, 700] # Clinear, pen 0, MT = 30.71,
-
-# PELT stuff
 CP_est=[40,305,340, 605, 640,900]
 
-#rpt.display(data, CPs_true.values, CP_est_N)
+#rpt.display(data, CPs_true.values, CP_est)
 
 #predicted_cp_RUPTURES_N = np.zeros(data.shape)
 #predicted_cp_RUPTURES_N[np.array(CP_est_N)-1]=1
