@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 
 from functools import partial
 import bayesian_changepoint_detection.offline_changepoint_detection as offcd
+from sklearn.preprocessing import MinMaxScaler
 
 # %% COLLECT DATA
 
@@ -32,6 +33,13 @@ df = df.reset_index(drop = True)
 df = df[['TIMESTAMP','Air In1', 'Air In2', 'Water In1','Water In2']]
 df = df.loc[:, ~df.columns.duplicated()]
 # %% Consvert CPs timestamps to index
+
+# Normalise process varaibles
+# NORMALISED SIGNALS
+min_max_scaler = preprocessing.MinMaxScaler()
+x_scaled = min_max_scaler.fit_transform(df.values)
+norm_df = pd.DataFrame(x_scaled)
+norm_df.columns = df.columns
 
 # Apply Piecewise Aggregate Approximation
 
