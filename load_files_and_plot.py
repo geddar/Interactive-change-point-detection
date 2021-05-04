@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Feb 23 16:58:50 2021
-A script to explore datafiles (not genreate, load from directory)
+
+A script to explore datafiles (not genreate, load from directory).
+uses the file structure found in this repository.
 
 @author: Rebecca Gedda
 """
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import ruptures as rpt
+#import ruptures as rpt
 #from scipy.signal import find_peaks
-
-import bayesian_changepoint_detection.offline_changepoint_detection as offcd
-from functools import partial
 
 #  FUNCTIONS 
 def get_df_name(df):
@@ -39,7 +38,20 @@ def read_directory_files(path):
         else:
             #data = pd.read_csv(filename)
             data = pd.read_csv(os.path.join(directory, filename), delimiter=",", index_col=0)
-    return df, data, CPs, Bayes_pcp, CPs_bayes
+    return data, CPs, Bayes_pcp, CPs_bayes
+
+def read_results(path):
+    import os
+
+    directory = path
+    
+    df = pd.DataFrame()
+    for filename in os.listdir(directory):
+        if filename.endswith(".csv"):
+            dfn = pd.read_csv(os.path.join(directory, filename))
+            #print(dfn.head())
+            df = pd.concat([df, dfn], ignore_index=True)
+    return df
 
 # Function to plot semgents created by change points in different colours.
 def plot_shifting_backgorund(data, cps):
@@ -87,57 +99,25 @@ def print_metrics(CPs_true, CPs_predictions):
 
 
 # %% Read all files in a directory
-problem_tag = 'P3'
+problem_tag = 'P6'
 
-df, data, CPs_true, Bayes_pcp, CPs_bayes = read_directory_files('Simulated data/'+problem_tag)
-df['min_metric'] = df['AE']*df['MeanTime']*df['RI']
+data, CPs_true, Bayes_pcp, CPs_bayes = read_directory_files('Simulated data/'+problem_tag)
+
+df = read_results('Result metrics/'+ problem_tag)
 
 # Divide into PELT and WIN
 df_PELT = df[df['Search_direction']== 'PELT']
 df_WIN = df[df['Search_direction']=='WIN']
 
-#cp_bayes, _ = find_peaks(Bayes_pcp.values.reshape(1,-1)[0], height = 0.2, distance = 10)
-#cp_bayes = np.concatenate([cp_bayes, [data.shape[0]]])
+del df
 
-#CPs_bayes = pd.DataFrame(cp_bayes)
-#CPs_bayes.to_csv('Simulated data/'+problem_tag+'/CPs_bayes.dat')
 
-# % PRINT METRICS FOR SOME PREDICTIONS
+# %% PRINT METRICS FOR SOME PREDICTIONS
 print('BAYESIAN PREDICTIONS')
 print(problem_tag)
 print_metrics(CPs_true, CPs_bayes)
 
-# %% Plot data and true datapoints
-
-plot_shifting_backgorund(data, CPs_true.values)
-plt.title('Changing variance (PELT)', fontsize=16)
-
-cp2 = [ 185,  370,  450,  640,  930, 1005]
-
-plt.plot(cp2, np.ones(len(cp2))*-5,  'o', label = "Normal")
-
-cp1 = [ 115,  275,  375,  520,  635,  740,  900, 1005]
-plt.plot(cp1, np.ones(len(cp1))*-5.6,  'o', label = "LinReg")
-
-cp3 = [ 110,  210,  310,  470,  575,  675,  800,  900, 1005]
-plt.plot( cp3, np.ones(len(cp3))*-6,  'o', label = "Ridge")
-
-plt.plot( CPs_bayes, np.ones(len(CPs_bayes))*-7, 'X', label = 'Bayesian' )
-plt.legend(loc='upper left', fontsize=16)
-
-# %% PLOT CPS
-
-CP_est=[40,305,340, 605, 640,900]
-
-#rpt.display(data, CPs_true.values, CP_est)
-
-#predicted_cp_RUPTURES_N = np.zeros(data.shape)
-#predicted_cp_RUPTURES_N[np.array(CP_est_N)-1]=1
-
-predicted_cp_RUPTURES = np.zeros(data.shape)
-predicted_cp_RUPTURES[np.array(CP_est)-1]=1
-
-# %%
+# %% Plot Bayesian PCP
 
 fig, axs = plt.subplots(2, 1, sharex=(True), figsize = [18,6])
 
@@ -154,25 +134,20 @@ fig.tight_layout()
 plt.show()
 
 
+# %% Plot data and true datapoints
 
-# %% Plot both approache's results
+# Select some change points to plot
+cp1 = [ 55, 200, 375, 550, 700]
+cp2 = [ 50, 155, 330, 505, 700]
+cp3 = [ 50, 155, 330, 505, 700]
 
-fig, axs = plt.subplots(2, 1, sharex=(True), figsize = [18,10])
+plot_shifting_backgorund(data, CPs_true.values)
+plt.title('Piecewise linear (WIN)', fontsize=16)
 
-axs[0].plot(data)
-axs[0].plot(CPs_true.values.reshape(1,-1)[0] - 1, data.values.reshape(1,-1)[0][CPs_true.values.reshape(1,-1)[0] - 1], 'o')
-axs[0].set_title('Simulated data', fontsize=20)
+plt.plot(cp2, np.ones(len(cp2))*-5,  'o', label = "AR")
+plt.plot(cp1, np.ones(len(cp1))*-5.6,  'o', label = "L1")
+plt.plot( cp3, np.ones(len(cp3))*-6,  'o', label = "L2")
 
-#axs[1].plot(predicted_cp_RUPTURES_N,'r', label = 'Normal')
-#axs[1].plot(predicted_cp_RUPTURES, label = 'L1')
-#axs[1].set_title('Optimisation approach', fontsize=16)
-#axs[1].legend(loc='upper left', fontsize=16)
+plt.plot( CPs_bayes, np.ones(len(CPs_bayes))*-7, 'X', label = 'Bayesian' )
+plt.legend(loc='upper left', fontsize=16)
 
-axs[1].plot(Bayes_pcp)
-axs[1].set_title('Bayesian approach', fontsize=16)
-
-fig.tight_layout()
-plt.show()
-
-# %% 
-rpt.base.BaseCost()

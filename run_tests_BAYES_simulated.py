@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Change point analysis with Ruptures and Bayesian detection.
+Created on Tue Mar 23 10:01:10 2021
+
+Change point analysis with Bayesian detection.
+A file to calculate Bayesian posterior distribution used for predicting 
+change points in simulated datasets. 
 
 Structure: 
     Imports
@@ -10,7 +14,7 @@ Structure:
     Plot of results
     Error estimation
 
-@author: DEREGED1
+@author: Rebecca Gedda
 """
 
 # %% Imports

@@ -2,7 +2,11 @@
 """
 Created on Mon Feb 22 09:59:37 2021
 
-@author: DEREGED1
+File to make predictions on the simulated dataset. 
+This file makes predictions and calculates metric values,
+and saves them as seperate files in folder Result Metics.
+
+@author:Rebecca Gedda
 """
 # IMPORTS ####################################################################
 import pandas as pd
@@ -21,6 +25,7 @@ from sklearn.linear_model import Ridge
 from sklearn.linear_model import Lasso
 
 # %% COST FUNCTIONS ##########################################################
+
 class CostLinReg(BaseCost):
 
     """Custom cost for exponential signals."""
@@ -133,7 +138,6 @@ class CostLasso(BaseCost):
         return residual
 
 
-
 # %% FUNCTIONS ###############################################################
 
 def calculate_predictions(data, name_tag, search_dir, cost_f, c_start, c_end, c_step, CPs_true):
@@ -220,7 +224,7 @@ def calculate_predictions(data, name_tag, search_dir, cost_f, c_start, c_end, c_
     cols = ["Search_direction","Cost_function","Penalty", "K", "AE", "MeanTime", #"RandIndex", 
             "Percision", "Recall", "F1", "RI", "CPs"]
     penalty_results.columns = cols
-    penalty_results.to_csv('metrics_data/'+name+'/'+cost_f+'_'+search_dir+'_'+name+'.csv')
+    penalty_results.to_csv('Result metrics/'+name+'/'+cost_f+'_'+search_dir+'_'+name+'.csv')
     #penalty_results.to_csv(cost_f+'_'+search_dir+'_'+name+'.csv')
     return penalty_results
 
@@ -263,7 +267,7 @@ def read_directory_files(path):
 problem_tag = 'P6'
 
 # Indicate which folders
-for data_tag in [problem_tag]: #['P1', 'P2', 'P3', 'P4', 'P5', 'P6']:
+for data_tag in ['P1', 'P2', 'P3', 'P4', 'P5', 'P6']: #['P1', 'P2', 'P3', 'P4', 'P5', 'P6']:
     
     print('Starting problem: ' + data_tag)
     data, CPs_true = read_data_files('Simulated data/'+ data_tag)
@@ -280,7 +284,7 @@ for data_tag in [problem_tag]: #['P1', 'P2', 'P3', 'P4', 'P5', 'P6']:
     plt.plot(CPs_true.values.reshape(1,-1)[0] - 1, data.values.reshape(1,-1)[0][CPs_true.values.reshape(1,-1)[0] - 1], 'o')
     
     # Indicate search directions ['WIN', 'PELT']
-    for search_direction in ['PELT']:
+    for search_direction in ['WIN']:
         if search_direction == 'WIN':
             start = 0
             end = 2
@@ -291,17 +295,9 @@ for data_tag in [problem_tag]: #['P1', 'P2', 'P3', 'P4', 'P5', 'P6']:
             jump = 5
          
         # Indicate cost functions ["l1", "l2", "ar", "clinear", "normal", "mahalanobis", 'LinReg', 'ridge', 'lasso']
-        for cost in  ['ridge', "lasso" ]:
+        for cost in  ["l1", "l2", "ar" ]:
             print(search_direction + '    ' + cost)
             some_df = calculate_predictions(data, data_tag, search_direction, cost, start, end, jump, CPs_true.values.reshape(1,-1)[0])
     
     print(data_tag + ' DONE!')
     
- # % Read all files in a directory
-
-df, data, CPs_true, Bayes_pcp = read_directory_files(r'C:/Users/DEREGED1/.spyder-py3/metrics_data/'+problem_tag)
-df['min_metric'] = df['AE']*df['MeanTime']*df['RI']
-
-# Divide into PELT and WIN
-df_PELT = df[df['Search_direction']== 'PELT']
-df_WIN = df[df['Search_direction']=='WIN']

@@ -3,9 +3,9 @@
 Created on Tue Mar 23 10:01:10 2021
 
 A file to calculate Bayesian posterior distribution used for predicting 
-change points in data. 
+change points in PRONTO data. 
 
-@author: DEREGED1
+@author: Rebecca Gedda
 """
 
 # IMPORTS
@@ -36,7 +36,7 @@ df = df.loc[:, ~df.columns.duplicated()]
 
 # Normalise process varaibles
 # NORMALISED SIGNALS
-min_max_scaler = preprocessing.MinMaxScaler()
+min_max_scaler = MinMaxScaler()
 x_scaled = min_max_scaler.fit_transform(df.values)
 norm_df = pd.DataFrame(x_scaled)
 norm_df.columns = df.columns

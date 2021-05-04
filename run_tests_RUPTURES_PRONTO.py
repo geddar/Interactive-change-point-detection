@@ -2,7 +2,11 @@
 """
 Created on Thu Apr 15 10:43:57 2021
 
-@author: DEREGED1
+File to make predictions on the PRONTO dataset. 
+This file prints the obtained predictions and metric values,
+and does not save them as seperate files. 
+
+@author:Rebecca Gedda
 """
 
 ### IMPORTS ##################################################################
@@ -64,7 +68,7 @@ def print_metrics(CPs_true, CPs_predictions):
     #RI = rpt_met.randindex(CPs_predictions, CPs_true)
     #print('RandIndex: '+ str(RI))
 
-# %%
+# %
 ### COST FUNCTIONS ##########################################################
 reg_const = 1
 
@@ -180,37 +184,21 @@ class CostLasso(BaseCost):
         residual = sum( np.abs( y.reshape(1,-1)[0] - clf.predict(X).reshape(1,-1)[0]))
         return residual
 
-
+# %%
 ### MAIN SCRIPT ##############################################################
 # EXPERIMENT DAY 4: 12-09-2017
 df = pd.read_csv('TD_0912/0912Testday4.csv')
+CPs_true = pd.read_csv('TD_0912/CPs.dat')
 
 # % Preparation of df
-
 df.columns =  df.iloc[1].values
 df = df.drop(0, axis = 0)
 df = df.drop(1, axis = 0)
 df = df.reset_index(drop = True)
 
 # % Select relevant columns
-df = df[['TIMESTAMP','Air In1', 'Air In2', 'Water In1','Water In2']]
+df = df[['Air In1', 'Air In2', 'Water In1','Water In2']]
 df = df.loc[:, ~df.columns.duplicated()]
-
-# % Consvert CPs timestamps to index
-CPS_0912_timestamps = ['10:35', '10:43', '10:50', '10:58', '11:08', '11:19', 
-                       '11:33', '11:51', '12:13', '12:30', '12:38', '12:49', 
-                       '12:58', '13:06', '13:18', '13:27']
-
-CPS_0912 = []
-
-for i in CPS_0912_timestamps:
-    df_temp = df[df['TIMESTAMP'] == '09/12/2017 '+i]
-    #print(np.mean(df_temp.index))
-    CPS_0912.append(int(np.floor(np.mean(df_temp.index))))
-
-CPS_0912.append(df.shape[0])
-CPs_0912 = pd.DataFrame(CPS_0912)
-df = df.drop('TIMESTAMP', axis = 1)
 
 # % convert to float from obj
 
@@ -239,6 +227,7 @@ if cost == 'ridge' or cost == 'lasso':
 print('Search direciton: '+ search_dir)
 if search_dir == 'WIN':
     print('Window width (WIN): '+str(window_width))
+
 #for penalty in [0.08, 0.06, 0.04, 0.02, 0.01, 0.009, 0.007, 0.005]:    
 print('Penalty: '+ str(penalty))
 predictions = []
@@ -251,6 +240,7 @@ for col in df.columns:
         data = norm_df[col].values
     
     # Select search direction
+    # WIN
     if search_dir == "WIN":
         if cost == 'LinReg':
             algo = rpt.Window(width = window_width, custom_cost=CostLinReg()).fit(data)
@@ -260,6 +250,8 @@ for col in df.columns:
             algo = rpt.Window(width = window_width, custom_cost=CostLasso()).fit(data)
         else:
             algo = rpt.Window(width = window_width, model=cost).fit(data)
+    
+    # PELT
     elif search_dir == "PELT":
         if cost == 'LinReg':
             algo = rpt.Pelt(custom_cost=CostLinReg()).fit(data)
@@ -278,12 +270,12 @@ for col in df.columns:
 predictions = np.concatenate(predictions)    
 predictions = np.unique(predictions)
 print(predictions)
-print_metrics(np.concatenate(CPs_0912.values), predictions)
+print_metrics(CPs_true['0'].values, predictions)
 print('-------------------------------------------------------------------')
 
 #
 # Plot the predictions
-plot_shifting_backgorund(df['Air In2'], CPs_0912.values)
+plot_shifting_backgorund(df['Air In2'], CPs_true['0'].values)
 plt.plot(predictions, np.ones(len(predictions)), 'X', label = cost)
 plt.title('Predictions using '+search_dir+' '+cost+ ' (Penalty = '+str(penalty)+')', fontsize = 14)
 plt.title('PRONTO dataset, Normal cost function', fontsize = 14)
