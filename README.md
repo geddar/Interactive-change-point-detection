@@ -1,5 +1,6 @@
 # Interactive-change-point-detection
-A repository for the work produced during my maters thesis [1] on the optimisation and Bayesian approaches. 
+A repository for user friendly change point detection using an optimisation approach and Bayesian statistics.
+This work was produced during my maters thesis [1] where a comparison between the twp appoaches was studied.
 
 The work is based on development from other contributers, where _Ruptures_ by Truonga et al. (based on work [2] forms a foundation for the optimisation approach. The repository 
 _bayesian_changepoint_detection_ by Johannes Kulick (besed on work by Fearnhead [3]) forms the foundation for the Bayesian approach.
@@ -31,5 +32,7 @@ Requires installation of:
 
 ## References
 [1] Rebecca Gedda, _Interactive Change Point Detection Approahces in Time-Series_ (2021)
+
 [2] Charles Truonga  et al.,  _Selective  review  of  offline  change  point  detection methods_ (2020)
+
 [3] Paul Fearnhead, _Exact and Efficient Bayesian Inference for Multiple Changepoint problems_ (2006)
