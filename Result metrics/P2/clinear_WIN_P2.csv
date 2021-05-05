@@ -1,3 +1,0 @@
-,Search_direction,Cost_function,Penalty,K,AE,MeanTime,Percision,Recall,F1,RI,CPs
-0,WIN,clinear,0,4,2,46.666666666666664,0.0,0.0,0,0.8465277777777778,[150 340 450 600]
-1,WIN,clinear,1,4,2,46.666666666666664,0.0,0.0,0,0.8465277777777778,[150 340 450 600]

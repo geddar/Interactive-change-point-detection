@@ -1,3 +1,0 @@
-,Search_direction,Cost_function,Penalty,K,AE,MeanTime,Percision,Recall,F1,RI,CPs
-0,WIN,ar,0,6,0,5.0,1.0,1.0,1.0,0.9763333333333334,[105 190 300 405 505 600]
-1,WIN,ar,1,1,5,,0.0,0.0,0.0,0.8625,[600]
