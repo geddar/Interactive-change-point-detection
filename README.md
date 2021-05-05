@@ -4,3 +4,7 @@ A repository for the work produced during my maters thesis on the optimisation a
 Requires installation of:
 - ruptures
 - bayesian_changepoint_detection
+
+Licence
+
+Cite papers
