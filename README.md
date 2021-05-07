@@ -3,7 +3,7 @@ A repository for user friendly change point detection using an optimisation appr
 This work was produced during my maters thesis [1] where a comparison between the twp appoaches was studied.
 
 The work is based on development from other contributers, where _Ruptures_ by Truonga et al. (based on work [2] forms a foundation for the optimisation approach. The repository 
-_bayesian_changepoint_detection_ by Johannes Kulick (besed on work by Fearnhead [3]) forms the foundation for the Bayesian approach.
+_bayesian_changepoint_detection_ by Johannes Kulick (based on work by Fearnhead [3]) forms the foundation for the Bayesian approach.
 Respective repositories are found here:
 - https://github.com/deepcharles/ruptures
 - https://github.com/hildensia/bayesian_changepoint_detection
