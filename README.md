@@ -28,7 +28,8 @@ Visualisation of the results can be made using _visualise_results.py_.
 
 ## Requirements
 Requires installation of:
-- ruptures
+- ruptures >= 1.0.5
+- pyts >= 0.11.0
 
 ## References
 [1] Rebecca Gedda, _Interactive Change Point Detection Approahces in Time-Series_ (2021)
