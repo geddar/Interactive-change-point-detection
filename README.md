@@ -37,3 +37,6 @@ Requires installation of:
 [2] Charles Truonga  et al.,  _Selective  review  of  offline  change  point  detection methods_ (2020)
 
 [3] Paul Fearnhead, _Exact and Efficient Bayesian Inference for Multiple Changepoint problems_ (2006)
+
+PRONTO dataset available at: 
+A. Stief, R. Tan et al.,_A heterogeneous benchmark dataset for data analytics:  Multiphase flow facility casestudy_, Journal of Process Control (2019)
